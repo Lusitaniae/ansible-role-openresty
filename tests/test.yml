@@ -18,6 +18,7 @@
     - name: Install PIP packages for SNI verification.
       pip:
         name: "{{ item }}"
+        state: latest
       with_items:
         - urllib3
         - pyOpenSSL

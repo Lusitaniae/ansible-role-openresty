@@ -5,10 +5,17 @@
     state: present
   register: import_key
 
-- name: Add apt repository
+- name: Add Ubuntu apt repository
   apt_repository:
     repo: "deb http://openresty.org/package/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} main"
     state: present
+  when: ansible_distribution == 'Debian'
+
+- name: Add Debian apt repository
+  apt_repository:
+    repo: "deb http://openresty.org/package/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} openresty"
+    state: present
+  when: ansible_distribution == 'Debian'
 
 - name: Install OpenResty
   apt:
