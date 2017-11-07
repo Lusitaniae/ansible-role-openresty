@@ -1,0 +1,12 @@
+---
+# Install OpenResty Package Manager and OpenResty Doc
+openresty_recommended_install: yes
+
+# Packages installed for yum systems.
+openresty_recommended_yum:
+  - openresty-resty
+  - openresty-opm
+  - openresty-doc
+
+# Protocol to be used for package download.
+openresty_repo_protocol: https

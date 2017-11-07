@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  author: Lusitaniae
+  description: OpenResty for RedHat/CentOS/Debian/Ubuntu.
+  company:
+  license: MIT
+  min_ansible_version: 2.0
+  platforms:
+  - name: EL
+    versions:
+    - 6
+    - 7
+  - name: Debian
+    versions:
+    - 8
+    - 9
+  - name: Ubuntu
+    versions:
+    - 14
+    - 16
+    - 17
+  galaxy_tags:
+    - web
+
+dependencies: []

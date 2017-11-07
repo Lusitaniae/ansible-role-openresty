@@ -1,0 +1,54 @@
+---
+# RHEL/CentOS 6 have problems due to lack of support of SNI
+- set_fact:
+    openresty_repo_protocol: http
+  when: ansible_distribution_version.split(".")[0]|int == 6
+
+- name: Add RHEL repository
+  yum_repository:
+    name: openresty
+    description: "Official OpenResty Open Source Repository for {{ ansible_distribution }}"
+    baseurl: "{{ openresty_repo_protocol }}://openresty.org/package/rhel/openresty.repo"
+    skip_if_unavailable: False
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://openresty.org/package/pubkey.gpg
+    enabled: yes
+  when: ansible_distribution == 'RedHat'
+
+- name: Add CentOS/Amazon Linux repository
+  yum_repository:
+    name: openresty
+    description: "Official OpenResty Open Source Repository for {{ ansible_distribution }}"
+    baseurl: "https://openresty.org/package/{{ ansible_distribution|lower }}/$releasever/$basearch"
+    skip_if_unavailable: False
+    gpgcheck: yes
+    repo_gpgcheck: yes
+    gpgkey: https://openresty.org/package/pubkey.gpg
+    enabled: yes
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Amazon'
+
+- name: Add yum key
+  rpm_key:
+    key: "{{ openresty_repo_protocol }}://openresty.org/package/pubkey.gpg"
+    state: present
+  register: import_key
+
+- name: Import yum key (prevent verification prompt)
+  command: "yum -q makecache -y --disablerepo='*' --enablerepo='openresty'"
+  when: import_key.changed
+
+- name: Install OpenResty
+  yum:
+    name: openresty
+    state: present
+    update_cache: yes
+  notify: restart openresty
+
+- name: Install OpenResty recommended packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ openresty_recommended_yum }}"
+  when: openresty_recommended_install == "yes"
+  notify: restart openresty

@@ -1,0 +1,19 @@
+---
+- name: Add apt key
+  apt_key:
+    url: https://openresty.org/package/pubkey.gpg
+    state: present
+  register: import_key
+
+- name: Add apt repository
+  apt_repository:
+    repo: "deb http://openresty.org/package/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} main"
+    state: present
+
+- name: Install OpenResty
+  apt:
+    name: openresty
+    state: present
+    update_cache: yes
+    install_recommends: "{{ openresty_recommended_install }}"
+  notify: restart openresty

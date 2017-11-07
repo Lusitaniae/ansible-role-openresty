@@ -1,0 +1,10 @@
+---
+- name: restart openresty
+  service: name=openresty state=restarted
+
+- name: validate openresty configuration
+  command: openresty -t
+  changed_when: False
+
+- name: reload openresty
+  service: name=openresty state=reloaded
