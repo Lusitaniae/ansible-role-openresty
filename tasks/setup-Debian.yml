@@ -9,7 +9,9 @@
   apt_repository:
     repo: "deb http://openresty.org/package/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} main"
     state: present
-  when: ansible_distribution == 'Debian'
+  when: ansible_distribution == 'Ubuntu'
+
+- debug: msg="{{ansible_distribution}}"
 
 - name: Add Debian apt repository
   apt_repository:
